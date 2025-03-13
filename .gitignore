@@ -172,3 +172,4 @@ cython_debug/
 
 # Example tasks file
 tasks.json
+.qodo

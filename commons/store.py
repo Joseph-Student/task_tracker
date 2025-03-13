@@ -4,11 +4,27 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Protocol
 
-from commons.task import Task
-from commons.task_status import TaskStatus
+from .task import Task
+from .task_status import TaskStatus
 
 
 class StoreProtocol(Protocol):
+    """
+    A protocol defining the interface for a store that manages task data.
+
+    Attributes:
+        file_path (Path): The path to the file where tasks are stored.
+
+    Methods:
+        create_file() -> None:
+            Creates a new file for storing tasks.
+
+        update_file(tasks: list[Task]) -> None:
+            Updates the file with the provided list of tasks.
+
+        load() -> list[Task]:
+            Loads and returns a list of tasks from the file.
+    """
     file_path: Path
 
     def create_file(self) -> None: ...
@@ -20,6 +36,20 @@ class StoreProtocol(Protocol):
 
 @dataclass
 class StoreJSON(StoreProtocol):
+    """
+    A JSON-based implementation of the StoreProtocol for managing task data.
+
+    Attributes:
+        file_path (Path): The path to the JSON file where tasks are stored.
+
+    Methods:
+        __post_init__(): Initializes the store by creating the file if it doesn't exist.
+        create_file() -> None: Creates a new JSON file for storing tasks.
+        update_file(tasks: list[Task]) -> None: Updates the JSON file with the provided list of tasks.
+        _dump_task(task: Task) -> dict: Converts a Task object into a dictionary suitable for JSON serialization.
+        _load_task(response_dict: dict) -> Task: Converts a dictionary back into a Task object.
+        load() -> list[Task]: Loads and returns a list of tasks from the JSON file.
+    """
     file_path: Path
 
     def __post_init__(self):
